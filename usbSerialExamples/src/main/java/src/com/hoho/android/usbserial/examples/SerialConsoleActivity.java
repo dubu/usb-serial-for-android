@@ -32,6 +32,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Button;
+import android.view.View;
 
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.util.HexDump;
@@ -68,6 +70,8 @@ public class SerialConsoleActivity extends Activity {
     private ScrollView mScrollView;
     private CheckBox chkDTR;
     private CheckBox chkRTS;
+    private Button buttonOn;
+    private Button buttonOff;
 
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
@@ -102,11 +106,45 @@ public class SerialConsoleActivity extends Activity {
         chkDTR = (CheckBox) findViewById(R.id.checkBoxDTR);
         chkRTS = (CheckBox) findViewById(R.id.checkBoxRTS);
 
+        buttonOn = (Button) findViewById(R.id.button_on);
+        buttonOn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                try {
+                    byte buffer[] = new byte[] {'1'};
+                    int numBytesWrite = sPort.write(buffer, 200);
+                    Log.d(TAG, "Write" + numBytesWrite + " bytes.");
+                } catch (IOException x) {
+
+                }
+            }
+        });
+
+
+        buttonOff = (Button) findViewById(R.id.button_off);
+        buttonOff.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                try {
+
+//                    byte buffer[] = new byte[16];
+                    byte buffer[] = new byte[] {'0'};
+                    int numBytesWrite = sPort.write(buffer, 200);
+                    Log.d(TAG, "Write" + numBytesWrite + " bytes.");
+                } catch (IOException x) {
+
+                }
+            }
+        });
+
+
         chkDTR.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
                     sPort.setDTR(isChecked);
+
+//                    byte buffer[] = new byte[16];
+//                    int numBytesWrite= sPort.write(buffer, '1');
+//                    Log.d(TAG, "Write" + numBytesWrite + " bytes.");
                 }catch (IOException x){}
             }
         });
@@ -116,6 +154,9 @@ public class SerialConsoleActivity extends Activity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 try {
                     sPort.setRTS(isChecked);
+//                    byte buffer[] = new byte[16];
+//                    int numBytesWrite= sPort.write(buffer, '0');
+//                    Log.d(TAG, "Write" + numBytesWrite + " bytes.");
                 }catch (IOException x){}
             }
         });

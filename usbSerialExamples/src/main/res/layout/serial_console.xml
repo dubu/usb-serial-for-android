@@ -38,6 +38,18 @@
         android:layout_height="1dip"
         android:background="#eeeeee" />
 
+
+    <Button android:id="@+id/button_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="sendMessage" />
+
+
+    <Button android:id="@+id/button_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="sendMessage" />
+
     <ScrollView
         android:id="@+id/demoScroller"
         android:layout_width="match_parent"
