@@ -106,12 +106,21 @@ void setup() {
     // supply your own gyro offsets here, scaled for min sensitivity
  //****************************************************************************************************************************************
  //  use calibration program to get your own values
-    mpu.setXGyroOffset(44);//(220);
-    mpu.setYGyroOffset(-21);//(76);
-    mpu.setZGyroOffset(-30);//(-85);
-    mpu.setXAccelOffset(-1875);//(1788); // 1688 factory default for my test chip
-    mpu.setYAccelOffset(-1426);
-    mpu.setZAccelOffset(2215);
+//    mpu.setXGyroOffset(44);//(220);
+//    mpu.setYGyroOffset(-21);//(76);
+//    mpu.setZGyroOffset(-30);//(-85);
+//    mpu.setXAccelOffset(-1875);//(1788); // 1688 factory default for my test chip
+//    mpu.setYAccelOffset(-1426);
+//    mpu.setZAccelOffset(2215);
+
+
+    mpu.setXGyroOffset(220);
+    mpu.setYGyroOffset(76);
+    mpu.setZGyroOffset(-85);
+    mpu.setZAccelOffset(1788); // 1688 factory default for my test chip
+
+
+    
  //****************************************************************************************************************************************
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
@@ -194,13 +203,29 @@ void loop() {
           mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 
 
+          // add
+          Serial.print("ypr\t");
+          Serial.print(ypr[0] * 180/M_PI);
+          Serial.print("\t");
+
+//          if(ypr[1]* 180/M_PI > 90){
+//            Serial.print( (ypr[1]+M_PI/2) * -180/M_PI  );
+//          }else{
+//            Serial.print( (ypr[1]+M_PI/2) * 180/M_PI  );
+//          }
+          
+          Serial.print(   ypr[1]   );
+          Serial.print("\t");
+          Serial.println(ypr[2] * 180/M_PI);
+
+
 //*********************************************************************************************************************************************************************
 //
 // PID control based on Pseudocode from https://en.wikipedia.org/wiki/PID_controller
 // and the balance point idea from https://www.youtube.com/user/jmhrvy1947
 
           OldP =P;                     // save value of P
-          P = (ypr[2] * 1000) + bp;    // update P from MPU add bp to correct for balance
+          P = (ypr[1] * 1000) + bp;    // update P from MPU add bp to correct for balance
           OldI = I;                    // save old I
           I = I + (P * 0.05) ;
           I = I + ((I - OldI)*2  );     // calulate new I
