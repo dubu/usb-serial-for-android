@@ -214,7 +214,7 @@ void loop() {
 //            Serial.print( (ypr[1]+M_PI/2) * 180/M_PI  );
 //          }
           
-          Serial.print(   ypr[1]   );
+          Serial.print( ypr[1] * 180/M_PI  );
           Serial.print("\t");
           Serial.println(ypr[2] * 180/M_PI);
 
