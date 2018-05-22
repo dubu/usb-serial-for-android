@@ -1,5 +1,5 @@
 #define led 13  // built-in LED
-int ByteReceived;
+float ByteReceived;
 float OldP = 0;         // Previous value used to calculate change in P //  DELTA P
 float P = 0;            //  Proportional component
 float I = 0;            //  Integral        just the sum of P over time
@@ -11,11 +11,13 @@ long a = 0;             // L298N to IN 1 to 4
 long b = 0;             //
 const int PinR1 = 5;    //  arduino  pin 5 to l298  pin IN4
 const int PinR2 = 6;    //  arduino  pin 6 to l298  pin IN3
-const int PinL1 = 7;    //  arduino  pin 7 to l298  pin IN1
+const int PinL1 = 7;    //  arduino  pin 7 to l298  pin IN1 
 const int PinL2 = 8;    //  arduino  pin 8 to l298  pin IN2
 const int PwmR  = 9;    //  arduino  pin 9 to l298  pin ENB
 const int PwmL  = 10;   //  arduino  pin 10 to l298  pin ENA
-
+String inputString = "";
+boolean stringComplete = false;
+static int counter = 0;
 
 void setup()   /****** SETUP: RUNS ONCE ******/
 {
@@ -25,25 +27,20 @@ void setup()   /****** SETUP: RUNS ONCE ******/
 
 void loop()   /****** LOOP: RUNS CONSTANTLY ******/
 {
-  if (Serial.available() > 0)
-  {
-    ByteReceived = Serial.read();
-//    Serial.println("read"); 
+//  Serial.print("Tick #");
+//  Serial.print(counter++, DEC);
+//  Serial.print("\n");
+//  delay(1000);
+  if (stringComplete) {
 
-    if(ByteReceived == '1')
-    {
-      digitalWrite(LED_BUILTIN,HIGH);
-    }
-
-    if(ByteReceived == '0')
-    {
-      digitalWrite(LED_BUILTIN,LOW);
-    }
-
+//      Serial.println(inputString.toFloat());
+      Serial.println(inputString.toFloat());
+      Serial.print("\n");
 //    Serial.println();    // End the line
-
-
-         OldP =P;                     // save value of P
+      ByteReceived = inputString.toFloat();
+    
+          
+          OldP =P;                     // save value of P
           P = (ByteReceived * 1000) + bp;    // update P from MPU add bp to correct for balance
           OldI = I;                    // save old I
           I = I + (P * 0.05) ;
@@ -68,6 +65,13 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
             bp = bp + 0.01;
             digitalWrite(13, 1);
           }
+
+          if(pwm < 0){
+            digitalWrite(13, 1);
+          }
+          if(pwm > 0){
+            digitalWrite(13, 0);
+          }
           /////////////////////////////
           // remove sign from PWM as - value has no meaning
           pwm  = abs(pwm);
@@ -75,13 +79,13 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
           if ( pwm > 255) pwm = 255;
 
             if(abs(ByteReceived) < abs(1.1)){
-              analogWrite(PwmR, pwm);
-              digitalWrite(PinR1, a);
-              digitalWrite(PinR2 ,b);
-
-              analogWrite(PwmL ,pwm);
-              digitalWrite(PinL1 ,a);
-              digitalWrite(PinL2 ,b);
+//              analogWrite(PwmR, pwm);
+//              digitalWrite(PinR1, a);
+//              digitalWrite(PinR2 ,b);
+//
+//              analogWrite(PwmL ,pwm);
+//              digitalWrite(PinL1 ,a);
+//              digitalWrite(PinL2 ,b);
               }
            else{
               analogWrite(PwmR , 0);
@@ -90,9 +94,35 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
               bp = -98;
               delay(1000);
            }
-
-
-  }
+           inputString = "";
+           stringComplete = false;
+  }           
 }
+
+void serialEvent() {
+    while (Serial.available()) {
+      
+      inputString = Serial.readStringUntil('\n');
+//      char inChar = (char)Serial.read();
+//      inputString += inChar;
+  
+//      if(inChar == '1')
+//      {
+//        digitalWrite(LED_BUILTIN,HIGH);
+//      }
+  
+//      if(inChar == '0')
+//      {
+//        digitalWrite(LED_BUILTIN,LOW);
+//      }
+//      if (inChar == 'x') {
+//        stringComplete = true;
+//      }
+     stringComplete = true;
+  }
+//  ByteReceived = atof(inputString);
+  
+  
+}  
 
 
