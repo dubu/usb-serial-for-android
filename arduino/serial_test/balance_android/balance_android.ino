@@ -31,13 +31,28 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
 //  Serial.print(counter++, DEC);
 //  Serial.print("\n");
 //  delay(1000);
-  if (stringComplete) {
+   if (Serial.available() > 0)
+  {
 
 //      Serial.println(inputString.toFloat());
-      Serial.println(inputString.toFloat());
-      Serial.print("\n");
+//      Serial.println(inputString.toFloat());
+//      Serial.print("\n");
 //    Serial.println();    // End the line
+
+
+      inputString = Serial.readStringUntil('\n');
       ByteReceived = inputString.toFloat();
+
+      if(inputString == "1")
+    {
+      digitalWrite(LED_BUILTIN,HIGH);
+    }
+
+    if(inputString =="0")
+    {
+      digitalWrite(LED_BUILTIN,LOW);
+    }
+
     
           
           OldP =P;                     // save value of P
@@ -79,13 +94,13 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
           if ( pwm > 255) pwm = 255;
 
             if(abs(ByteReceived) < abs(1.1)){
-//              analogWrite(PwmR, pwm);
-//              digitalWrite(PinR1, a);
-//              digitalWrite(PinR2 ,b);
-//
-//              analogWrite(PwmL ,pwm);
-//              digitalWrite(PinL1 ,a);
-//              digitalWrite(PinL2 ,b);
+              analogWrite(PwmR, pwm);
+              digitalWrite(PinR1, a);
+              digitalWrite(PinR2 ,b);
+
+              analogWrite(PwmL ,pwm);
+              digitalWrite(PinL1 ,a);
+              digitalWrite(PinL2 ,b);
               }
            else{
               analogWrite(PwmR , 0);
@@ -99,30 +114,5 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
   }           
 }
 
-void serialEvent() {
-    while (Serial.available()) {
-      
-      inputString = Serial.readStringUntil('\n');
-//      char inChar = (char)Serial.read();
-//      inputString += inChar;
-  
-//      if(inChar == '1')
-//      {
-//        digitalWrite(LED_BUILTIN,HIGH);
-//      }
-  
-//      if(inChar == '0')
-//      {
-//        digitalWrite(LED_BUILTIN,LOW);
-//      }
-//      if (inChar == 'x') {
-//        stringComplete = true;
-//      }
-     stringComplete = true;
-  }
-//  ByteReceived = atof(inputString);
-  
-  
-}  
 
 
