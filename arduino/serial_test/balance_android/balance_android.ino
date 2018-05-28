@@ -43,15 +43,15 @@ void loop()   /****** LOOP: RUNS CONSTANTLY ******/
       inputString = Serial.readStringUntil('\n');
       ByteReceived = inputString.toFloat();
 
-      if(inputString == "1")
-    {
-      digitalWrite(LED_BUILTIN,HIGH);
-    }
-
-    if(inputString =="0")
-    {
-      digitalWrite(LED_BUILTIN,LOW);
-    }
+//      if(inputString == "1")
+//    {
+//      digitalWrite(LED_BUILTIN,HIGH);
+//    }
+//
+//    if(inputString =="0")
+//    {
+//      digitalWrite(LED_BUILTIN,LOW);
+//    }
 
     
           
